@@ -1,0 +1,1034 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Para ti, mi princesita ♥</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Great+Vibes&family=Lato:wght@300;400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --chocolate-dark: #1a0d08;
+    --chocolate-mid: #2e1a0f;
+    --chocolate-base: #3d2314;
+    --chocolate-warm: #5c3520;
+    --chocolate-light: #7a4a2e;
+    --gold-deep: #8b6914;
+    --gold-mid: #c9920a;
+    --gold-bright: #e8b84b;
+    --gold-pale: #f5d98a;
+    --gold-shine: #fdf0c0;
+    --cream: #fdf8f0;
+    --text-warm: #f5e6d0;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--chocolate-dark);
+    font-family: 'Cormorant Garamond', serif;
+    color: var(--text-warm);
+    overflow-x: hidden;
+  }
+
+  /* ── PANTALLA DE BIENVENIDA ── */
+  #welcome-screen {
+    position: fixed; inset: 0; z-index: 1000;
+    background: radial-gradient(ellipse at center, #2e1a0f 0%, #0f0704 100%);
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    cursor: pointer;
+    transition: opacity 1.2s ease, transform 1.2s ease;
+  }
+  #welcome-screen.fade-out {
+    opacity: 0; pointer-events: none; transform: scale(1.04);
+  }
+
+  .welcome-petals {
+    position: absolute; inset: 0; overflow: hidden; pointer-events: none;
+  }
+  .petal {
+    position: absolute; width: 8px; height: 8px;
+    background: radial-gradient(circle, var(--gold-pale), transparent);
+    border-radius: 50%; opacity: 0;
+    animation: floatPetal linear infinite;
+  }
+
+  @keyframes floatPetal {
+    0%   { transform: translateY(110vh) rotate(0deg); opacity: 0; }
+    10%  { opacity: 0.7; }
+    90%  { opacity: 0.4; }
+    100% { transform: translateY(-10vh) rotate(720deg); opacity: 0; }
+  }
+
+  .welcome-glow {
+    width: 220px; height: 220px;
+    background: radial-gradient(circle, rgba(201,146,10,0.18) 0%, transparent 70%);
+    border-radius: 50%;
+    position: absolute;
+    animation: pulse 3s ease-in-out infinite;
+  }
+  @keyframes pulse {
+    0%,100% { transform: scale(1); opacity: 0.6; }
+    50% { transform: scale(1.3); opacity: 1; }
+  }
+
+  .welcome-icon {
+    font-size: 72px;
+    animation: heartbeat 1.6s ease-in-out infinite;
+    position: relative; z-index: 1;
+    filter: drop-shadow(0 0 18px rgba(232,184,75,0.7));
+  }
+  @keyframes heartbeat {
+    0%,100% { transform: scale(1); }
+    14% { transform: scale(1.18); }
+    28% { transform: scale(1); }
+    42% { transform: scale(1.12); }
+    56% { transform: scale(1); }
+  }
+
+  .welcome-title {
+    font-family: 'Great Vibes', cursive;
+    font-size: clamp(2.8rem, 8vw, 5rem);
+    color: var(--gold-bright);
+    text-shadow: 0 0 30px rgba(232,184,75,0.6);
+    margin: 18px 0 10px;
+    position: relative; z-index: 1;
+    animation: titleGlow 2.5s ease-in-out infinite alternate;
+  }
+  @keyframes titleGlow {
+    from { text-shadow: 0 0 20px rgba(232,184,75,0.4); }
+    to   { text-shadow: 0 0 40px rgba(232,184,75,0.9), 0 0 80px rgba(201,146,10,0.3); }
+  }
+
+  .welcome-sub {
+    font-family: 'Lato', sans-serif;
+    font-size: 0.88rem;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--gold-pale);
+    opacity: 0.75;
+    position: relative; z-index: 1;
+    animation: blink 2s ease-in-out infinite;
+  }
+  @keyframes blink {
+    0%,100% { opacity: 0.5; }
+    50% { opacity: 1; }
+  }
+
+  .welcome-border {
+    position: absolute; inset: 20px;
+    border: 1px solid rgba(201,146,10,0.2);
+    border-radius: 4px;
+    pointer-events: none;
+  }
+  .welcome-border::before, .welcome-border::after {
+    content: '◆';
+    position: absolute; color: var(--gold-mid);
+    font-size: 12px; opacity: 0.6;
+  }
+  .welcome-border::before { top: -8px; left: 50%; transform: translateX(-50%); }
+  .welcome-border::after  { bottom: -8px; left: 50%; transform: translateX(-50%); }
+
+  /* ── CARTA PRINCIPAL ── */
+  #carta {
+    min-height: 100vh;
+    background:
+      radial-gradient(ellipse at 20% 30%, rgba(201,146,10,0.06) 0%, transparent 50%),
+      radial-gradient(ellipse at 80% 70%, rgba(201,146,10,0.04) 0%, transparent 50%),
+      linear-gradient(160deg, #2e1a0f 0%, #1a0d08 40%, #220f07 70%, #1a0d08 100%);
+    padding: 60px 20px 80px;
+    opacity: 0;
+    transition: opacity 1s ease 0.3s;
+  }
+  #carta.visible { opacity: 1; }
+
+  /* Partículas flotantes */
+  .particle {
+    position: fixed; pointer-events: none;
+    width: 3px; height: 3px;
+    background: var(--gold-bright);
+    border-radius: 50%;
+    opacity: 0;
+    animation: drift linear infinite;
+  }
+  @keyframes drift {
+    0%   { transform: translateY(0) translateX(0) scale(0); opacity: 0; }
+    20%  { opacity: 0.8; }
+    80%  { opacity: 0.3; }
+    100% { transform: translateY(-80px) translateX(30px) scale(1.5); opacity: 0; }
+  }
+
+  /* Marco de la carta */
+  .carta-frame {
+    max-width: 720px;
+    margin: 0 auto;
+    position: relative;
+  }
+
+  .carta-frame::before {
+    content: '';
+    position: absolute; inset: -2px;
+    background: linear-gradient(135deg, var(--gold-mid), transparent 40%, transparent 60%, var(--gold-mid));
+    border-radius: 4px;
+    opacity: 0.35;
+    pointer-events: none;
+  }
+
+  .carta-inner {
+    background: linear-gradient(160deg, #3a1f10 0%, #2a1209 60%, #321609 100%);
+    border: 1px solid rgba(201,146,10,0.25);
+    border-radius: 3px;
+    padding: clamp(30px, 6vw, 60px);
+    position: relative;
+    box-shadow:
+      0 0 60px rgba(0,0,0,0.6),
+      inset 0 0 80px rgba(0,0,0,0.3),
+      0 0 0 1px rgba(201,146,10,0.1);
+  }
+
+  /* Ornamentos esquinas */
+  .corner {
+    position: absolute;
+    width: 50px; height: 50px;
+    opacity: 0.5;
+  }
+  .corner svg { width: 100%; height: 100%; }
+  .corner.tl { top: 12px; left: 12px; }
+  .corner.tr { top: 12px; right: 12px; transform: scaleX(-1); }
+  .corner.bl { bottom: 12px; left: 12px; transform: scaleY(-1); }
+  .corner.br { bottom: 12px; right: 12px; transform: scale(-1); }
+
+  /* Encabezado */
+  .carta-header {
+    text-align: center;
+    margin-bottom: 40px;
+    padding-bottom: 30px;
+    border-bottom: 1px solid rgba(201,146,10,0.2);
+    position: relative;
+  }
+  .carta-header::after {
+    content: '❧';
+    position: absolute; bottom: -14px; left: 50%;
+    transform: translateX(-50%);
+    background: #2a1209;
+    padding: 0 12px;
+    color: var(--gold-mid);
+    font-size: 22px;
+  }
+
+  .fecha {
+    font-family: 'Lato', sans-serif;
+    font-size: 0.75rem;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--gold-mid);
+    opacity: 0.7;
+    margin-bottom: 14px;
+  }
+
+  .carta-titulo {
+    font-family: 'Great Vibes', cursive;
+    font-size: clamp(2.4rem, 7vw, 4.2rem);
+    color: var(--gold-bright);
+    line-height: 1.1;
+    text-shadow: 0 0 40px rgba(201,146,10,0.4);
+    animation: titleShimmer 4s ease-in-out infinite alternate;
+  }
+  @keyframes titleShimmer {
+    from { text-shadow: 0 0 20px rgba(201,146,10,0.3); }
+    to   { text-shadow: 0 0 50px rgba(232,184,75,0.7), 0 0 100px rgba(201,146,10,0.2); }
+  }
+
+  .subtitulo {
+    font-style: italic;
+    font-size: 1rem;
+    color: var(--gold-pale);
+    opacity: 0.6;
+    margin-top: 8px;
+    letter-spacing: 0.05em;
+  }
+
+  /* Cuerpo carta */
+  .saludo {
+    font-family: 'Great Vibes', cursive;
+    font-size: clamp(1.8rem, 5vw, 2.6rem);
+    color: var(--gold-bright);
+    margin-bottom: 24px;
+  }
+
+  .parrafo {
+    font-size: clamp(1rem, 2.5vw, 1.18rem);
+    line-height: 1.95;
+    color: var(--text-warm);
+    margin-bottom: 22px;
+    font-weight: 300;
+    opacity: 0;
+    transform: translateY(14px);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+  }
+  .parrafo.visible { opacity: 1; transform: translateY(0); }
+
+  .parrafo em {
+    font-style: italic;
+    color: var(--gold-pale);
+  }
+
+  .parrafo strong {
+    font-weight: 600;
+    color: var(--gold-bright);
+  }
+
+  /* Bloque apoyo especial */
+  .apoyo-box {
+    background: linear-gradient(135deg, rgba(139,105,20,0.12), rgba(61,35,20,0.3));
+    border: 1px solid rgba(201,146,10,0.3);
+    border-radius: 2px;
+    padding: 24px 28px;
+    margin: 32px 0;
+    position: relative;
+    opacity: 0;
+    transform: translateY(14px);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+  }
+  .apoyo-box.visible { opacity: 1; transform: translateY(0); }
+
+  .apoyo-box::before {
+    content: '♡';
+    position: absolute; top: -13px; left: 50%;
+    transform: translateX(-50%);
+    background: #2a1209;
+    padding: 0 10px;
+    color: var(--gold-bright);
+    font-size: 20px;
+  }
+
+  .apoyo-box p {
+    font-size: clamp(0.95rem, 2.2vw, 1.1rem);
+    line-height: 1.9;
+    color: var(--gold-shine);
+    font-style: italic;
+    text-align: center;
+  }
+
+  /* Divisor ornamental */
+  .divisor {
+    text-align: center;
+    color: var(--gold-mid);
+    margin: 32px 0;
+    opacity: 0.5;
+    letter-spacing: 0.5em;
+    font-size: 0.8rem;
+  }
+
+  /* Lista de lo que ama */
+  .amor-list {
+    list-style: none;
+    margin: 20px 0 28px;
+  }
+  .amor-list li {
+    padding: 8px 0 8px 28px;
+    position: relative;
+    font-size: clamp(0.92rem, 2.2vw, 1.08rem);
+    line-height: 1.7;
+    color: var(--text-warm);
+    opacity: 0;
+    transform: translateX(-10px);
+    transition: opacity 0.5s ease, transform 0.5s ease;
+    border-bottom: 1px solid rgba(201,146,10,0.07);
+  }
+  .amor-list li.visible { opacity: 1; transform: translateX(0); }
+  .amor-list li::before {
+    content: '✦';
+    position: absolute; left: 0; top: 8px;
+    color: var(--gold-mid);
+    font-size: 11px;
+  }
+
+  /* Foto */
+  .foto-box {
+    margin: 40px 0;
+    text-align: center;
+    opacity: 0;
+    transform: translateY(20px) scale(0.98);
+    transition: opacity 0.8s ease, transform 0.8s ease;
+  }
+  .foto-box.visible { opacity: 1; transform: translateY(0) scale(1); }
+
+  .foto-frame {
+    display: inline-block;
+    padding: 10px;
+    background: linear-gradient(135deg, rgba(201,146,10,0.3), rgba(139,105,20,0.1), rgba(201,146,10,0.3));
+    border: 1px solid rgba(201,146,10,0.4);
+    position: relative;
+    box-shadow: 0 8px 40px rgba(0,0,0,0.5), inset 0 0 20px rgba(201,146,10,0.05);
+  }
+
+  .foto-frame img {
+    display: block;
+    max-width: 100%;
+    width: 360px;
+    height: 260px;
+    object-fit: cover;
+    filter: sepia(20%) saturate(0.9) brightness(0.95);
+    transition: filter 0.4s ease;
+  }
+  .foto-frame:hover img {
+    filter: sepia(0%) saturate(1.1) brightness(1.02);
+  }
+
+  .foto-caption {
+    font-family: 'Great Vibes', cursive;
+    font-size: 1.5rem;
+    color: var(--gold-bright);
+    margin-top: 14px;
+    opacity: 0.85;
+  }
+
+  /* Firma */
+  .firma {
+    text-align: right;
+    margin-top: 44px;
+    padding-top: 28px;
+    border-top: 1px solid rgba(201,146,10,0.15);
+  }
+
+  .firma-texto {
+    font-family: 'Great Vibes', cursive;
+    font-size: clamp(2rem, 5vw, 3rem);
+    color: var(--gold-bright);
+    text-shadow: 0 0 30px rgba(232,184,75,0.4);
+    line-height: 1.2;
+  }
+
+  .firma-sub {
+    font-family: 'Lato', sans-serif;
+    font-size: 0.72rem;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--gold-pale);
+    opacity: 0.5;
+    margin-top: 6px;
+  }
+
+  /* Corazones interactivos */
+  .heart-burst {
+    position: fixed; pointer-events: none; z-index: 999;
+    font-size: 20px;
+    animation: burstHeart 1.2s ease-out forwards;
+  }
+  @keyframes burstHeart {
+    0%   { transform: translate(-50%,-50%) scale(0) rotate(-15deg); opacity: 1; }
+    50%  { transform: translate(-50%,-80px) scale(1.4) rotate(10deg); opacity: 1; }
+    100% { transform: translate(-50%,-120px) scale(0.5) rotate(-5deg); opacity: 0; }
+  }
+
+  /* Botón música */
+  #music-btn {
+    position: fixed; bottom: 24px; right: 24px; z-index: 500;
+    width: 52px; height: 52px;
+    background: linear-gradient(135deg, var(--gold-mid), var(--gold-deep));
+    border: none; border-radius: 50%;
+    cursor: pointer;
+    box-shadow: 0 4px 20px rgba(201,146,10,0.4);
+    font-size: 20px;
+    color: var(--chocolate-dark);
+    transition: transform 0.2s, box-shadow 0.2s;
+    display: flex; align-items: center; justify-content: center;
+  }
+  #music-btn:hover {
+    transform: scale(1.1);
+    box-shadow: 0 6px 30px rgba(201,146,10,0.6);
+  }
+  #music-btn.playing::after {
+    content: '';
+    position: absolute;
+    inset: -4px;
+    border: 2px solid var(--gold-bright);
+    border-radius: 50%;
+    animation: ring 1.5s linear infinite;
+  }
+  @keyframes ring {
+    from { transform: scale(1); opacity: 1; }
+    to   { transform: scale(1.5); opacity: 0; }
+  }
+
+  /* ── GATITO INTERACTIVO ── */
+  .gatito-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 44px 0 10px;
+    position: relative;
+  }
+
+  .gatito-hint {
+    font-family: 'Lato', sans-serif;
+    font-size: 0.75rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--gold-mid);
+    opacity: 0.6;
+    margin-bottom: 18px;
+    animation: blink 2.5s ease-in-out infinite;
+  }
+
+  .gatito-wrapper {
+    position: relative;
+    cursor: pointer;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .gatito-svg {
+    width: 160px;
+    transition: transform 0.15s ease;
+    filter: drop-shadow(0 6px 20px rgba(201,146,10,0.3));
+  }
+  .gatito-wrapper:hover .gatito-svg {
+    filter: drop-shadow(0 8px 30px rgba(232,184,75,0.5));
+  }
+  .gatito-wrapper.squeezed .gatito-svg {
+    transform: scale(0.88) rotate(-4deg);
+  }
+
+  /* Corazón que el gatito sostiene — late */
+  .gato-heart {
+    animation: gatoHeartbeat 1.4s ease-in-out infinite;
+    transform-origin: 50% 60%;
+  }
+  .gatito-wrapper.squeezed .gato-heart {
+    animation: gatoSquish 0.35s ease forwards;
+  }
+  @keyframes gatoHeartbeat {
+    0%,100% { transform: scale(1); }
+    15% { transform: scale(1.22); }
+    30% { transform: scale(1); }
+    45% { transform: scale(1.14); }
+    60% { transform: scale(1); }
+  }
+  @keyframes gatoSquish {
+    0%  { transform: scale(1.3) rotate(-8deg); }
+    50% { transform: scale(0.75) rotate(12deg); }
+    100%{ transform: scale(1.1) rotate(0deg); }
+  }
+
+  /* Orejas del gatito se mueven */
+  .gato-ear-l { transform-origin: 38px 22px; }
+  .gato-ear-r { transform-origin: 62px 22px; }
+
+  /* Cola */
+  .gato-tail { animation: tailWag 2.2s ease-in-out infinite; transform-origin: 120px 95px; }
+  @keyframes tailWag {
+    0%,100% { transform: rotate(0deg); }
+    30% { transform: rotate(15deg); }
+    70% { transform: rotate(-10deg); }
+  }
+
+  /* Burbuja mensaje */
+  .gatito-bubble {
+    position: absolute;
+    top: -20px;
+    left: 50%;
+    transform: translateX(-50%) translateY(-100%) scale(0);
+    transform-origin: bottom center;
+    background: linear-gradient(135deg, #3a1f10, #2a1209);
+    border: 1px solid rgba(201,146,10,0.5);
+    border-radius: 16px;
+    padding: 14px 20px;
+    min-width: 200px;
+    max-width: 280px;
+    text-align: center;
+    pointer-events: none;
+    transition: transform 0.35s cubic-bezier(0.34,1.56,0.64,1), opacity 0.35s ease;
+    opacity: 0;
+    z-index: 10;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.4), inset 0 0 20px rgba(201,146,10,0.04);
+  }
+  .gatito-bubble.show {
+    transform: translateX(-50%) translateY(-100%) scale(1);
+    opacity: 1;
+  }
+  .gatito-bubble::after {
+    content: '';
+    position: absolute;
+    bottom: -8px; left: 50%;
+    transform: translateX(-50%);
+    width: 0; height: 0;
+    border-left: 8px solid transparent;
+    border-right: 8px solid transparent;
+    border-top: 8px solid rgba(201,146,10,0.5);
+  }
+  .bubble-text {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1rem;
+    font-style: italic;
+    color: var(--gold-shine);
+    line-height: 1.5;
+  }
+  .bubble-emoji {
+    font-size: 1.4rem;
+    display: block;
+    margin-bottom: 4px;
+  }
+
+  /* Contador de mimos */
+  .mimo-counter {
+    font-family: 'Lato', sans-serif;
+    font-size: 0.7rem;
+    letter-spacing: 0.15em;
+    color: var(--gold-mid);
+    opacity: 0.5;
+    margin-top: 14px;
+    text-transform: uppercase;
+  }
+
+  /* Responsive */
+  @media (max-width: 480px) {
+    .carta-inner { padding: 28px 20px; }
+    .foto-frame img { width: 100%; height: 200px; }
+    .gatito-svg { width: 130px; }
+    .gatito-bubble { min-width: 170px; max-width: 240px; font-size: 0.9rem; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ── AUDIO ── -->
+<audio id="bg-music" loop>
+  <source src="AF.mp3" type="audio/mpeg">
+</audio>
+
+<!-- ── PANTALLA BIENVENIDA ── -->
+<div id="welcome-screen" onclick="openLetter()">
+  <div class="welcome-border"></div>
+  <div class="welcome-petals" id="petals-container"></div>
+  <div class="welcome-glow"></div>
+  <div class="welcome-icon">♥</div>
+  <h1 class="welcome-title">Para mi princesita</h1>
+  <p class="welcome-sub">toca para abrir tu carta</p>
+</div>
+
+<!-- ── CARTA ── -->
+<div id="carta">
+  <div class="carta-frame">
+    <div class="carta-inner">
+
+      <!-- Ornamentos esquina -->
+      <div class="corner tl">
+        <svg viewBox="0 0 50 50" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M5 45 L5 5 L45 5" stroke="#c9920a" stroke-width="1" fill="none"/>
+          <path d="M5 5 L18 18" stroke="#c9920a" stroke-width="0.8" opacity="0.5"/>
+          <circle cx="5" cy="5" r="2.5" fill="#c9920a" opacity="0.7"/>
+          <circle cx="45" cy="5" r="1.5" fill="#c9920a" opacity="0.4"/>
+          <circle cx="5" cy="45" r="1.5" fill="#c9920a" opacity="0.4"/>
+        </svg>
+      </div>
+      <div class="corner tr">
+        <svg viewBox="0 0 50 50" fill="none"><path d="M5 45 L5 5 L45 5" stroke="#c9920a" stroke-width="1" fill="none"/><path d="M5 5 L18 18" stroke="#c9920a" stroke-width="0.8" opacity="0.5"/><circle cx="5" cy="5" r="2.5" fill="#c9920a" opacity="0.7"/><circle cx="45" cy="5" r="1.5" fill="#c9920a" opacity="0.4"/><circle cx="5" cy="45" r="1.5" fill="#c9920a" opacity="0.4"/></svg>
+      </div>
+      <div class="corner bl">
+        <svg viewBox="0 0 50 50" fill="none"><path d="M5 45 L5 5 L45 5" stroke="#c9920a" stroke-width="1" fill="none"/><path d="M5 5 L18 18" stroke="#c9920a" stroke-width="0.8" opacity="0.5"/><circle cx="5" cy="5" r="2.5" fill="#c9920a" opacity="0.7"/><circle cx="45" cy="5" r="1.5" fill="#c9920a" opacity="0.4"/><circle cx="5" cy="45" r="1.5" fill="#c9920a" opacity="0.4"/></svg>
+      </div>
+      <div class="corner br">
+        <svg viewBox="0 0 50 50" fill="none"><path d="M5 45 L5 5 L45 5" stroke="#c9920a" stroke-width="1" fill="none"/><path d="M5 5 L18 18" stroke="#c9920a" stroke-width="0.8" opacity="0.5"/><circle cx="5" cy="5" r="2.5" fill="#c9920a" opacity="0.7"/><circle cx="45" cy="5" r="1.5" fill="#c9920a" opacity="0.4"/><circle cx="5" cy="45" r="1.5" fill="#c9920a" opacity="0.4"/></svg>
+      </div>
+
+      <!-- Encabezado -->
+      <div class="carta-header">
+        <div class="fecha" id="fecha-display"></div>
+        <h2 class="carta-titulo">Para mi Angy</h2>
+        <p class="subtitulo">mi princesita, mi todo</p>
+      </div>
+
+      <!-- Cuerpo -->
+      <p class="saludo reveal">Mi amor,</p>
+
+      <p class="parrafo reveal">
+        Hoy quiero que sientas, desde lo más profundo de mi corazón, que <strong>no estás sola</strong>. Sé que tu cuerpo a veces duele, que hay días pesados que llegan sin avisar — y quiero que sepas que en esos momentos, <em>especialmente en esos momentos</em>, yo estoy aquí. A tu lado. Firme. Sin irme a ningún lado.
+      </p>
+
+      <div class="apoyo-box reveal">
+        <p>
+          "Descansa, mi niña. Que para eso estoy yo — para cuidarte, para darte calor, para ser ese lugar seguro donde siempre puedes llegar tal como eres. No tienes que ser fuerte sola. Aquí conmigo puedes ser simplemente tú."
+        </p>
+      </div>
+
+      <p class="parrafo reveal">
+        Me encanta que te <strong>abras conmigo</strong>, que me cuentes las cosas aunque sean pequeñas, aunque creas que no importan — para mí todo lo que sientes importa, todo lo que piensas importa. Cada vez que me miras con esos ojos tan atentos, tan llenos de amor, siento que el mundo entero se detiene. <em>Me miras de una manera que nadie más me mira.</em>
+      </p>
+
+      <div class="divisor">· · · ✦ · · ·</div>
+
+      <p class="parrafo reveal">Amo tanto de ti, mi princesita. Podría escribirte páginas y páginas pero déjame decirte lo que más llevo en el corazón:</p>
+
+      <ul class="amor-list">
+        <li class="reveal">Amo lo <em>sentimental</em> que eres — que sientes bonito, que te mueven las cosas que importan.</li>
+        <li class="reveal">Amo que me <em>dices las cosas</em> — que confíes en mí lo suficiente para abrirte, eso es uno de los regalos más bonitos que me has dado.</li>
+        <li class="reveal">Amo que me miras <strong>con detalle, con paciencia, con amor</strong> — como si realmente me ves, y eso me hace sentir el hombre más afortunado del mundo.</li>
+        <li class="reveal">Amo <em>consentirte</em>, hacerte cariño, que sepas que tienes a alguien que te pone en primer lugar siempre.</li>
+        <li class="reveal">Amo todo de ti — lo bonito, lo complicado, lo que te hace única. <strong>Todo.</strong></li>
+      </ul>
+
+      <p class="parrafo reveal">
+        Quiero que sepas, con toda la certeza de mi corazón, que <strong>eres la única</strong>. No existe nadie más en mis pensamientos, no existe nadie más en mis planes, no existe nadie más en mi futuro que no seas tú. <em>Solo tú. Siempre tú.</em> Eres la persona con la que quiero construir todo.
+      </p>
+
+      <p class="parrafo reveal">
+        Así que en estos días en que tu cuerpo descansa y a veces se siente difícil, recibe esto como un abrazo largo, como mis manos en las tuyas, como mi voz diciéndote bajito: <strong>te amo, te cuido, estoy aquí.</strong> Eres mi princesita chiquita y siempre lo serás.
+      </p>
+
+      <!-- Foto -->
+      <div class="foto-box reveal">
+        <div class="foto-frame">
+          <img src="love.jpg" alt="Nosotros dos ♥" onerror="this.parentElement.innerHTML='<div style=\'width:360px;height:260px;display:flex;align-items:center;justify-content:center;color:rgba(201,146,10,0.4);font-size:0.85rem;font-family:Lato,sans-serif;letter-spacing:0.1em;\'>📷 love.jpg</div>'">
+        </div>
+        <div class="foto-caption">Tú y yo, siempre</div>
+      </div>
+
+      <!-- Gatito interactivo -->
+      <div class="gatito-section reveal">
+        <p class="gatito-hint">tócame ♥</p>
+        <div class="gatito-wrapper" id="gatitoBtn">
+
+          <!-- Burbuja mensaje -->
+          <div class="gatito-bubble" id="gatitoBubble">
+            <span class="bubble-emoji" id="bubbleEmoji">🌸</span>
+            <span class="bubble-text" id="bubbleText">Te amo tanto, mi princesita</span>
+          </div>
+
+          <!-- SVG estilo imagen: trazo grueso negro, fondo blanco, corazón rosa -->
+          <svg class="gatito-svg" viewBox="0 0 200 220" xmlns="http://www.w3.org/2000/svg">
+            <!-- Cuerpo -->
+            <ellipse cx="100" cy="155" rx="52" ry="48" fill="white" stroke="#1a1a1a" stroke-width="7" stroke-linejoin="round"/>
+            <!-- Cabeza -->
+            <ellipse cx="100" cy="95" rx="48" ry="44" fill="white" stroke="#1a1a1a" stroke-width="7"/>
+            <!-- Oreja izquierda -->
+            <polygon class="gato-ear-l" points="58,72 46,40 76,62" fill="white" stroke="#1a1a1a" stroke-width="7" stroke-linejoin="round"/>
+            <!-- Oreja derecha -->
+            <polygon class="gato-ear-r" points="142,72 154,40 124,62" fill="white" stroke="#1a1a1a" stroke-width="7" stroke-linejoin="round"/>
+            <!-- Manchas grises dentro orejas -->
+            <ellipse cx="60" cy="60" rx="7" ry="10" fill="#c8c8c8" opacity="0.7"/>
+            <ellipse cx="140" cy="60" rx="7" ry="10" fill="#c8c8c8" opacity="0.7"/>
+            <!-- Cachetes rosados -->
+            <ellipse cx="72" cy="107" rx="11" ry="8" fill="#f5a0b0" opacity="0.65"/>
+            <ellipse cx="128" cy="107" rx="11" ry="8" fill="#f5a0b0" opacity="0.65"/>
+            <!-- Ojos (dos puntos redondos) -->
+            <circle cx="84" cy="92" r="5" fill="#1a1a1a"/>
+            <circle cx="116" cy="92" r="5" fill="#1a1a1a"/>
+            <!-- Brillo en ojos -->
+            <circle cx="87" cy="89" r="2" fill="white"/>
+            <circle cx="119" cy="89" r="2" fill="white"/>
+            <!-- Nariz pequeña -->
+            <ellipse cx="100" cy="103" rx="4" ry="3" fill="#c8a0a0"/>
+            <!-- Bigotes izq -->
+            <line x1="55" y1="100" x2="85" y2="104" stroke="#1a1a1a" stroke-width="3.5" stroke-linecap="round"/>
+            <line x1="52" y1="108" x2="83" y2="108" stroke="#1a1a1a" stroke-width="3.5" stroke-linecap="round"/>
+            <!-- Bigotes der -->
+            <line x1="145" y1="100" x2="115" y2="104" stroke="#1a1a1a" stroke-width="3.5" stroke-linecap="round"/>
+            <line x1="148" y1="108" x2="117" y2="108" stroke="#1a1a1a" stroke-width="3.5" stroke-linecap="round"/>
+            <!-- Bracitos (redondeados, sosteniendo el corazón) -->
+            <path d="M52,155 Q30,160 34,180 Q38,195 55,190" fill="white" stroke="#1a1a1a" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M148,155 Q170,160 166,180 Q162,195 145,190" fill="white" stroke="#1a1a1a" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
+            <!-- Manitas -->
+            <ellipse cx="47" cy="186" rx="13" ry="10" fill="white" stroke="#1a1a1a" stroke-width="6"/>
+            <ellipse cx="153" cy="186" rx="13" ry="10" fill="white" stroke="#1a1a1a" stroke-width="6"/>
+            <!-- Patitas -->
+            <ellipse cx="80" cy="200" rx="16" ry="10" fill="white" stroke="#1a1a1a" stroke-width="6"/>
+            <ellipse cx="120" cy="200" rx="16" ry="10" fill="white" stroke="#1a1a1a" stroke-width="6"/>
+            <!-- Corazón rosa grande que sostiene -->
+            <g class="gato-heart">
+              <path d="M100,172 C100,172 68,148 68,130 C68,118 80,113 90,120 C95,123 100,128 100,128 C100,128 105,123 110,120 C120,113 132,118 132,130 C132,148 100,172 100,172 Z"
+                fill="#f080a0" stroke="#d05070" stroke-width="3.5" stroke-linejoin="round"/>
+              <!-- brillo del corazón -->
+              <ellipse cx="85" cy="125" rx="8" ry="5" fill="white" opacity="0.35" transform="rotate(-20,85,125)"/>
+            </g>
+          </svg>
+        </div>
+        <div class="mimo-counter" id="mimoCounter">0 mimos dados 🐾</div>
+      </div>
+
+      <!-- Firma -->
+      <div class="firma">
+        <div class="firma-texto">Con todo mi amor,<br>tu Fer</div>
+        <div class="firma-sub">para siempre · solo tú · incondicional</div>
+      </div>
+
+    </div><!-- /carta-inner -->
+  </div><!-- /carta-frame -->
+</div><!-- /carta -->
+
+<!-- Botón música -->
+<button id="music-btn" onclick="toggleMusic()" title="Música">♪</button>
+
+<script>
+  // ── Fecha ──
+  const meses = ['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
+  const hoy = new Date();
+  document.getElementById('fecha-display').textContent =
+    `${hoy.getDate()} de ${meses[hoy.getMonth()]} de ${hoy.getFullYear()}`;
+
+  // ── Pétalos en pantalla de bienvenida ──
+  const container = document.getElementById('petals-container');
+  for (let i = 0; i < 28; i++) {
+    const p = document.createElement('div');
+    p.className = 'petal';
+    p.style.cssText = `
+      left: ${Math.random()*100}%;
+      width: ${4 + Math.random()*8}px;
+      height: ${4 + Math.random()*8}px;
+      animation-duration: ${6 + Math.random()*10}s;
+      animation-delay: ${-Math.random()*14}s;
+    `;
+    container.appendChild(p);
+  }
+
+  // ── Abrir carta ──
+  function openLetter() {
+    const ws = document.getElementById('welcome-screen');
+    const carta = document.getElementById('carta');
+    ws.classList.add('fade-out');
+    carta.classList.add('visible');
+    setTimeout(() => { ws.style.display = 'none'; }, 1300);
+
+    // Música automática
+    const audio = document.getElementById('bg-music');
+    audio.volume = 0.55;
+    audio.play().then(() => {
+      document.getElementById('music-btn').classList.add('playing');
+    }).catch(() => {});
+
+    // Revelar elementos con scroll observer
+    setTimeout(setupReveal, 600);
+    spawnParticles();
+  }
+
+  // ── Reveal on scroll ──
+  function setupReveal() {
+    const items = document.querySelectorAll('.reveal');
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((e, i) => {
+        if (e.isIntersecting) {
+          setTimeout(() => e.target.classList.add('visible'), i * 90);
+          observer.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0.15 });
+    items.forEach(el => observer.observe(el));
+  }
+
+  // ── Música ──
+  let playing = false;
+  function toggleMusic() {
+    const audio = document.getElementById('bg-music');
+    const btn = document.getElementById('music-btn');
+    if (audio.paused) {
+      audio.play();
+      btn.classList.add('playing');
+      btn.textContent = '♫';
+      playing = true;
+    } else {
+      audio.pause();
+      btn.classList.remove('playing');
+      btn.textContent = '♪';
+      playing = false;
+    }
+  }
+
+  // ── Partículas flotantes ──
+  function spawnParticles() {
+    setInterval(() => {
+      const p = document.createElement('div');
+      p.className = 'particle';
+      p.style.cssText = `
+        left: ${10 + Math.random()*80}%;
+        bottom: ${Math.random()*30}%;
+        animation-duration: ${3 + Math.random()*5}s;
+        animation-delay: 0s;
+        width: ${2 + Math.random()*3}px;
+        height: ${2 + Math.random()*3}px;
+      `;
+      document.body.appendChild(p);
+      setTimeout(() => p.remove(), 8000);
+    }, 600);
+  }
+
+  // ── Gatito interactivo ──
+  const mensajesGatito = [
+    { emoji: '🌸', texto: 'Te amo tanto, mi princesita' },
+    { emoji: '💛', texto: 'Estoy aquí, contigo, siempre' },
+    { emoji: '🤍', texto: 'Eres mi persona favorita en el mundo' },
+    { emoji: '💗', texto: 'Descansa, yo te cuido' },
+    { emoji: '✨', texto: 'Eres la única, solo tú, siempre tú' },
+    { emoji: '🍫', texto: 'Amo consentirte y hacerte cariño' },
+    { emoji: '💕', texto: 'Me encanta cuando te abres conmigo' },
+    { emoji: '🌙', texto: 'En tus días difíciles, aquí estoy' },
+    { emoji: '🐾', texto: 'Amo todo de ti, absolutamente todo' },
+    { emoji: '💞', texto: 'Eres lo más bonito que me ha pasado' },
+    { emoji: '🌺', texto: 'Amo que seas tan sentimental y linda' },
+    { emoji: '🫂', texto: 'Toma un abrazo apretado, mi niña' },
+    { emoji: '💖', texto: 'Eres mi princesita chiquita, siempre' },
+    { emoji: '🌟', texto: 'Contigo quiero construir todo' },
+    { emoji: '🍬', texto: 'Amo que me mires con tanto amor' },
+    { emoji: '🌷', texto: 'Eres más bonita que cualquier cosa' },
+    { emoji: '💝', texto: 'Mi corazón es tuyo, solo tuyo' },
+    { emoji: '🌈', texto: 'Contigo todo tiene más color' },
+    { emoji: '🦋', texto: 'Me haces sentir mariposas siempre' },
+    { emoji: '🌻', texto: 'Eres mi sol en los días grises' },
+    { emoji: '💫', texto: 'Brillar es lo que mejor haces' },
+    { emoji: '🍓', texto: 'Eres dulce como las fresas' },
+    { emoji: '🌙', texto: 'Pienso en ti antes de dormir' },
+    { emoji: '⭐', texto: 'Eres la estrella más linda del cielo' },
+    { emoji: '🎀', texto: 'Eres un regalo para mi vida' },
+    { emoji: '🌹', texto: 'Amo cada detalle de ti' },
+    { emoji: '💌', texto: 'Cada día quiero escribirte una carta' },
+    { emoji: '🫶', texto: 'Te quiero con todo lo que tengo' },
+    { emoji: '🌊', texto: 'Mi amor por ti no tiene fin' },
+    { emoji: '🍰', texto: 'Eres lo más dulce de mi vida' },
+    { emoji: '✦', texto: 'Eres especial de una manera única' },
+    { emoji: '🌿', texto: 'A tu lado me siento en paz' },
+    { emoji: '🫀', texto: 'Mi corazón late diferente contigo' },
+    { emoji: '🐱', texto: 'Te abrazo aunque sea desde aquí' },
+    { emoji: '💐', texto: 'Mereces todas las flores del mundo' },
+    { emoji: '🌠', texto: 'Pedí un deseo y saliste tú' },
+    { emoji: '🍯', texto: 'Eres lo más dulce que existe' },
+    { emoji: '🎶', texto: 'Cada canción me recuerda a ti' },
+    { emoji: '🌛', texto: 'Cuido de ti aunque estés dormida' },
+    { emoji: '💎', texto: 'Vales más que todo el oro del mundo' },
+    { emoji: '🫦', texto: 'Amo tu sonrisa, me derrite siempre' },
+    { emoji: '🌸', texto: 'Florezco cuando estás cerca de mí' },
+    { emoji: '🧸', texto: 'Quisiera ser tu peluche y darte calor' },
+    { emoji: '💗', texto: 'Eres la razón de mis mejores días' },
+    { emoji: '🌺', texto: 'Tu amor es lo más puro que conozco' },
+    { emoji: '🍵', texto: 'Eres el té caliente en los días fríos' },
+    { emoji: '🌙', texto: 'Te mando besos desde donde estoy' },
+    { emoji: '🎠', texto: 'Contigo la vida es más mágica' },
+    { emoji: '💛', texto: 'Amo que seas tan tú, siempre tan tú' },
+    { emoji: '🫁', texto: 'Respiro mejor cuando estás bien' },
+    { emoji: '🦢', texto: 'Eres elegante, linda y tierna a la vez' },
+    { emoji: '🍬', texto: 'Quiero consentirte todos los días' },
+    { emoji: '🌟', texto: 'Eres la favorita de mis pensamientos' },
+    { emoji: '🤍', texto: 'Nadie me hace sentir como tú' },
+    { emoji: '🎁', texto: 'Eres el mejor regalo que he recibido' },
+    { emoji: '🌷', texto: 'Amo que existas, en serio' },
+    { emoji: '💕', texto: 'Te elegiría mil veces más' },
+    { emoji: '🌊', texto: 'Eres la calma en mi tormenta' },
+    { emoji: '🍪', texto: 'Eres la cosa más tierna del universo' },
+    { emoji: '💞', texto: 'Nuestro amor es incondicional y puro' },
+    { emoji: '🌻', texto: 'Me alegras el día sin siquiera intentarlo' },
+    { emoji: '🫂', texto: 'Desearía abrazarte fuerte ahora mismo' },
+    { emoji: '🌈', texto: 'Eres mi color favorito' },
+    { emoji: '✨', texto: 'Tienes magia, de verdad la tienes' },
+    { emoji: '💝', texto: 'Amo que seas sentimental como yo' },
+    { emoji: '🌹', texto: 'Te mereces todo lo bonito del mundo' },
+    { emoji: '🐾', texto: 'Cada paso que doy es pensando en ti' },
+    { emoji: '💫', texto: 'Eres la razón por la que sonrío' },
+    { emoji: '🎀', texto: 'Quiero hacerte feliz siempre, siempre' },
+    { emoji: '🍓', texto: 'Eres mi fruta favorita de la vida' },
+    { emoji: '🌙', texto: 'La luna te manda besos de mi parte' },
+    { emoji: '💖', texto: 'Amo que existas en mi mundo' },
+    { emoji: '🦋', texto: 'Contigo soy una mejor versión de mí' },
+    { emoji: '🍰', texto: 'Eres el postre que siempre quiero' },
+    { emoji: '🌿', texto: 'Tu presencia me llena de tranquilidad' },
+    { emoji: '🫶', texto: 'Te quiero hoy, mañana y siempre' },
+    { emoji: '⭐', texto: 'Eres única, no hay otra como tú' },
+    { emoji: '🎶', texto: 'Eres mi canción favorita' },
+    { emoji: '💌', texto: 'Podría escribirte cartas para siempre' },
+    { emoji: '🌠', texto: 'Cada estrella me recuerda lo bonita que eres' },
+    { emoji: '🧸', texto: 'Eres suavecita para mi corazón' },
+    { emoji: '🍵', texto: 'Eres el abrazo caliente que siempre necesito' },
+    { emoji: '💎', texto: 'Eres irremplazable, lo más valioso' },
+    { emoji: '🌸', texto: 'Eres primavera en mi corazón' },
+    { emoji: '🫀', texto: 'Por ti mi corazón late más fuerte' },
+    { emoji: '🌊', texto: 'Mi amor por ti crece cada día más' },
+    { emoji: '🐱', texto: 'Miau = te amo infinito' },
+    { emoji: '💗', texto: 'Amo la forma en que me miras' },
+    { emoji: '🌺', texto: 'Eres linda hasta cuando no lo intentas' },
+    { emoji: '🎠', texto: 'Contigo cada día es una aventura bonita' },
+    { emoji: '💛', texto: 'Eres calidez pura' },
+    { emoji: '🌷', texto: 'Amo que te importe lo que siento' },
+    { emoji: '✦', texto: 'Eres el detalle más bonito de mi vida' },
+    { emoji: '🍯', texto: 'Eres dulce aunque no te des cuenta' },
+    { emoji: '💕', texto: 'Gracias por ser tan tú conmigo' },
+    { emoji: '🌻', texto: 'Me enseñaste a querer de verdad' },
+    { emoji: '🫦', texto: 'Amo tu manera de decirme las cosas' },
+    { emoji: '🌙', texto: 'Eres mi última idea antes de dormir' },
+    { emoji: '🎁', texto: 'Cada día contigo es un regalo' },
+    { emoji: '🌈', texto: 'Eres todo lo que pedí y más' },
+    { emoji: '💞', texto: 'Solo tú, mi princesita, solo tú' },
+    { emoji: '✨', texto: 'Eres mágica y ni siquiera lo sabes' },
+  ];
+  let mimoCount = 0;
+  let msgPool = [];
+
+  function siguienteMensaje() {
+    if (msgPool.length === 0) {
+      // Barajar todos los mensajes de nuevo
+      msgPool = [...mensajesGatito].sort(() => Math.random() - 0.5);
+    }
+    return msgPool.pop();
+  }
+
+  let bubbleTimer = null;
+
+  document.getElementById('gatitoBtn').addEventListener('click', (e) => {
+    e.stopPropagation();
+    const wrapper = document.getElementById('gatitoBtn');
+    const bubble = document.getElementById('gatitoBubble');
+    const emojiEl = document.getElementById('bubbleEmoji');
+    const textEl = document.getElementById('bubbleText');
+    const counter = document.getElementById('mimoCounter');
+
+    // Aprieta el gatito
+    wrapper.classList.add('squeezed');
+    setTimeout(() => wrapper.classList.remove('squeezed'), 400);
+
+    // Siguiente mensaje aleatorio
+    const msg = siguienteMensaje();
+    emojiEl.textContent = msg.emoji;
+    textEl.textContent = msg.texto;
+
+    // Mostrar burbuja
+    bubble.classList.add('show');
+    if (bubbleTimer) clearTimeout(bubbleTimer);
+    bubbleTimer = setTimeout(() => bubble.classList.remove('show'), 2800);
+
+    // Contador
+    mimoCount++;
+    counter.textContent = `${mimoCount} ${mimoCount === 1 ? 'mimo dado' : 'mimos dados'} 🐾`;
+
+    // Mini corazoncitos
+    for (let i = 0; i < 5; i++) {
+      setTimeout(() => {
+        const rect = wrapper.getBoundingClientRect();
+        const h = document.createElement('div');
+        h.className = 'heart-burst';
+        h.textContent = ['♥','💗','🌸','✦'][Math.floor(Math.random()*4)];
+        h.style.cssText = `
+          left: ${rect.left + rect.width/2 + (Math.random()-0.5)*80}px;
+          top: ${rect.top + rect.height/2 + (Math.random()-0.5)*60}px;
+          font-size: ${0.8 + Math.random()*0.8}rem;
+          color: ${['#f5a0b0','#e8b84b','#f5d98a'][Math.floor(Math.random()*3)]};
+        `;
+        document.body.appendChild(h);
+        setTimeout(() => h.remove(), 1300);
+      }, i * 80);
+    }
+  });
+
+  // ── Corazones al hacer click ──
+  document.addEventListener('click', (e) => {
+    if (e.target.id === 'welcome-screen' || e.target.closest('#welcome-screen')) return;
+    const hearts = ['♥','❤','💛','✦','❧'];
+    const h = document.createElement('div');
+    h.className = 'heart-burst';
+    h.textContent = hearts[Math.floor(Math.random()*hearts.length)];
+    h.style.cssText = `
+      left: ${e.clientX}px; top: ${e.clientY}px;
+      color: ${Math.random() > 0.5 ? '#e8b84b' : '#f5d98a'};
+    `;
+    document.body.appendChild(h);
+    setTimeout(() => h.remove(), 1300);
+  });
+</script>
+</body>
+</html>
